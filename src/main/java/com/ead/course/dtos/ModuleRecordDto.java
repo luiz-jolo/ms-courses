@@ -12,9 +12,6 @@ public record ModuleRecordDto(
         String title,
 
         @NotBlank
-        String description,
-
-        @NotNull
-        UUID courseId
+        String description
 ) {
 }

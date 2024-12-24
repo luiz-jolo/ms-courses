@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/modules")
 public class ModuleController {
 
     final ModuleService moduleService;
@@ -24,28 +23,41 @@ public class ModuleController {
         this.courseService = courseService;
     }
 
-    @PostMapping
-    public ResponseEntity<Object> saveModule(@RequestBody @Valid ModuleRecordDto moduleRecordDto){
-        if(courseService.findById(moduleRecordDto.courseId()).isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Course doesn't exists");
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(moduleService.save(moduleRecordDto));
+    @PostMapping("/courses/{courseId}/modules")
+    public ResponseEntity<Object> saveModule(@PathVariable UUID courseId,
+            @RequestBody @Valid ModuleRecordDto moduleRecordDto){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(moduleService.save(moduleRecordDto, courseService.findById(courseId).get()));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ModuleModel>> getModules(){
-        return ResponseEntity.status(HttpStatus.OK).body(moduleService.getAllModules());
+    @GetMapping("/courses/{courseId}/modules")
+    public ResponseEntity<List<ModuleModel>> getAllModules(@PathVariable UUID courseId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(moduleService.findAllModulesIntoCourse(courseId));
     }
 
-    @GetMapping("/{moduleId}")
-    public ResponseEntity<ModuleModel> getModuleById(@PathVariable UUID moduleId){
-        return ResponseEntity.status(HttpStatus.OK).body(moduleService.getOneModule(moduleId));
+    @GetMapping("/courses/{courseId}/modules/{moduleId}")
+    public ResponseEntity<Object> getOneModule(@PathVariable UUID courseId,
+                                                          @PathVariable UUID moduleId){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(moduleService.findModuleIntoCourse(courseId, moduleId));
     }
 
-    @PutMapping("/{moduleId}")
-    public ResponseEntity<ModuleModel> updateModule(@PathVariable UUID moduleId,
-                                                    @RequestBody @Valid ModuleRecordDto moduleRecordDto){
-        var module = moduleService.getOneModule(moduleId);
-        return ResponseEntity.status(HttpStatus.OK).body(moduleService.update(moduleRecordDto, module));
+    @DeleteMapping("/courses/{courseId}/modules/{moduleId}")
+    public ResponseEntity<Object> deleteModule(@PathVariable UUID courseId,
+                                               @PathVariable UUID moduleId){
+        moduleService.delete(moduleService.findModuleIntoCourse(courseId, moduleId).get());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Module deleted successfully");
+
+    }
+
+    @PutMapping("/courses/{courseId}/modules/{moduleId}")
+    public ResponseEntity<Object> updateModule(@PathVariable UUID courseId,
+                                               @PathVariable UUID moduleId,
+                                               @RequestBody @Valid ModuleRecordDto moduleRecordDto){
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(moduleService.update(moduleRecordDto,moduleService.findModuleIntoCourse(courseId, moduleId).get()));
     }
 }

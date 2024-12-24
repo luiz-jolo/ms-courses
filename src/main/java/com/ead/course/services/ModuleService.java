@@ -1,16 +1,18 @@
 package com.ead.course.services;
 
 import com.ead.course.dtos.ModuleRecordDto;
+import com.ead.course.models.CourseModel;
 import com.ead.course.models.ModuleModel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ModuleService {
 
     void delete(ModuleModel module);
-    ModuleModel save(ModuleRecordDto moduleRecordDto);
-    List<ModuleModel> getAllModules();
-    ModuleModel getOneModule(UUID id);
+    ModuleModel save(ModuleRecordDto moduleRecordDto, CourseModel courseModel);
     ModuleModel update(ModuleRecordDto moduleRecordDto, ModuleModel module);
+    List<ModuleModel> findAllModulesIntoCourse(UUID courseId);
+    Optional<ModuleModel> findModuleIntoCourse(UUID courseId, UUID moduleId);
 }

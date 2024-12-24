@@ -1,6 +1,7 @@
 package com.ead.course.services.impl;
 
 import com.ead.course.dtos.ModuleRecordDto;
+import com.ead.course.models.CourseModel;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
 import com.ead.course.repositories.CourseRepository;
@@ -31,10 +32,10 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public ModuleModel save(ModuleRecordDto moduleRecordDto) {
+    public ModuleModel save(ModuleRecordDto moduleRecordDto, CourseModel courseModel) {
         var moduleModel = new ModuleModel();
         BeanUtils.copyProperties(moduleRecordDto, moduleModel);
-        moduleModel.setCourse(courseRepository.getReferenceById(moduleRecordDto.courseId()));
+        moduleModel.setCourse(courseModel);
         moduleModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         return moduleRepository.save(moduleModel);
     }
@@ -50,13 +51,17 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public List<ModuleModel> getAllModules() {
-        return moduleRepository.findAll();
+    public List<ModuleModel> findAllModulesIntoCourse(UUID courseId) {
+        return moduleRepository.findAllModulesIntoCourse(courseId);
     }
 
     @Override
-    public ModuleModel getOneModule(UUID id) {
-        return moduleRepository.findById(id).orElse(null);
+    public Optional<ModuleModel> findModuleIntoCourse(UUID courseId, UUID moduleId){
+        Optional<ModuleModel> moduleModelOptional = moduleRepository.findModuleIntoCourse(courseId, moduleId);
+        if(moduleModelOptional.isEmpty()){
+            //exception
+        }
+        return moduleModelOptional;
     }
 
     @Override
