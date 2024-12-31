@@ -70,4 +70,12 @@ public class ModuleServiceImpl implements ModuleService {
         return moduleRepository.save(moduleModel);
     }
 
+    @Override
+    public Optional<ModuleModel> findModuleById(UUID moduleId) {
+        var module =  this.moduleRepository.findById(moduleId);
+        if(module.isEmpty()){
+            //exceptional
+        }
+        return module;
+    }
 }
