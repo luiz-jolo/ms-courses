@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class LessonServiceImpl implements LessonService {
@@ -29,4 +31,25 @@ public class LessonServiceImpl implements LessonService {
         lesson.setModule(moduleModel);
         return lessonRepository.save(lesson);
     }
+
+    @Override
+    public List<LessonModel> findAllLessonsIntoModule(UUID moduleId) {
+        return lessonRepository.findAllLessonsIntoModule(moduleId);
+    }
+
+    @Override
+    public Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId){
+        Optional<LessonModel> lessonModelOptional = lessonRepository.findLessonIntoModule(moduleId, lessonId);
+        if(lessonModelOptional.isEmpty()){
+            //exception
+        }
+        return lessonModelOptional;
+    }
+
+    @Override
+    public LessonModel update(LessonRecordDto lessonRecordDto, LessonModel lessonModel) {
+        BeanUtils.copyProperties(lessonRecordDto, lessonModel);
+        return lessonRepository.save(lessonModel);
+    }
+
 }
