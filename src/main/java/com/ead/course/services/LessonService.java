@@ -14,4 +14,5 @@ public interface LessonService {
     Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId);
     List<LessonModel> findAllLessonsIntoModule(UUID moduleId);
     LessonModel update(LessonRecordDto lessonRecordDto, LessonModel lessonModel);
+    void delete(LessonModel lessonModel);
 }

@@ -52,4 +52,9 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.save(lessonModel);
     }
 
+    @Override
+    public void delete(LessonModel lessonModel) {
+        lessonRepository.delete(lessonModel);
+    }
+
 }

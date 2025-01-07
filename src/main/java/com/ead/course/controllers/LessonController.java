@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -52,4 +51,9 @@ public class LessonController {
                 .body(lessonService.update(lessonRecordDto, lessonService.findLessonIntoModule(moduleId, lessonId).get()));
     }
 
+    @DeleteMapping("/modules/{moduleId}/lessons/{lessonId}")
+    ResponseEntity deleteLesson(@PathVariable UUID moduleId, @PathVariable UUID lessonId) {
+        lessonService.delete(lessonService.findLessonIntoModule(moduleId, lessonId).get());
+        return ResponseEntity.status(HttpStatus.OK).body("Lesson deleted successfully");
+    }
 }
