@@ -3,6 +3,9 @@ package com.ead.course.services;
 import com.ead.course.dtos.LessonRecordDto;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -15,4 +18,5 @@ public interface LessonService {
     List<LessonModel> findAllLessonsIntoModule(UUID moduleId);
     LessonModel update(LessonRecordDto lessonRecordDto, LessonModel lessonModel);
     void delete(LessonModel lessonModel);
+    Page<LessonModel> findAllLessonsIntoModule(Specification<LessonModel> spec, Pageable pageable);
 }
